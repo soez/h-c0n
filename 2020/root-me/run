@@ -1,0 +1,35 @@
+#!/bin/bash -p
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+STTY=$(stty -g)
+stty intr ^-
+
+TEMP=$(mktemp -d)
+chgrp noname ${TEMP} # pon tu username
+chmod 770 ${TEMP}
+
+echo ""
+echo "A share will be available: host:${TEMP} -> guest:/mnt/share"
+echo "Launching the vulnerable machine..."
+echo ""
+
+qemu-system-x86_64 \
+        -m 128M \
+	-cpu kvm64 \
+	-nographic \
+	-kernel bzImage \
+	-machine pc,accel=kvm \
+	-append 'console=ttyS0 loglevel=3 oops=panic panic=1' \
+	-monitor /dev/null \
+	-enable-kvm \
+	-initrd initramfs.img \
+        -snapshot \
+	-virtfs local,path=${TEMP},mount_tag=rootme,security_model=passthrough,id=noname \
+	-s
+
+rm -rf "${TEMP}" 2> /dev/null
+stty "${STTY}"
+
+# for share folder in qemu vm guest put in /etc/fstab:
+# rootme   /mnt/share   9p      trans=virtio,version=9p2000.L,user,umask=000   0 0
