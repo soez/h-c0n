@@ -1,0 +1,1 @@
+Exploit de [@dialluvioso_](https://twitter.com/dialluvioso_) [https://github.com/dialluvioso/box/blob/master/exploits/r2con2019-ctf-kernel/exploit.c](https://github.com/dialluvioso/box/blob/master/exploits/r2con2019-ctf-kernel/exploit.c)
